@@ -1,8 +1,7 @@
 /* This file creates the namespace object, adds numberAsWords as an element, and the numberAsWords object
- * It contains variables and functions useful for converting arabic numerals into words
- */
+It contains variables and functions useful for converting arabic numerals into words */
 
-//create namespace
+// Create namespace
 if (typeof namespace !== "object")
 {
 	var namespace = {};
@@ -10,7 +9,7 @@ if (typeof namespace !== "object")
 namespace.numberAsWords = {};
 var numberAsWords = namespace.numberAsWords;
 
-//language objects, so that multiple languages can exist in one file
+// Language objects, so that multiple languages can exist in one file
 numberAsWords.languages = {};
 
 numberAsWords.languages.english = {
@@ -24,10 +23,10 @@ uniqueHundreds : false,
 hundredsList : ["zero hundreds", "one hundred", "two hundred", "three hundred", "four hundred", "five hundred", "six hundred", "seven hundred", "eight hundred", "nine hundred"],
 uniqueIllions : false,
 illionsList : [],
-//this only goes up to a vigintillion, but that is well beyond the maximum integer in javascript, and there is a conditional branch that can handle numbers higher than that
+// This only goes up to a vigintillion, but that is well beyond the maximum integer in javascript, and there is a conditional branch that can handle numbers higher than that
 illionPrefixes : ["zero-", "m", "b", "tr", "quadr", "quint", "sext", "sept", "oct", "non", "dec", "undec", "duodec", "tredec", "quattuordec", "quindec", "sexdec", "septendec", "octodec", "novemdec", "vigint"],
 illionSuffixes : ["", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", ""],
-//single words are defined here, so they're easier to find and edit
+// Single words are defined here, so they're easier to find and edit
 and : "and",
 ten : "ten",
 tens : "tens",
@@ -60,10 +59,9 @@ uniqueHundreds : true,
 hundredsList : ["нулевые сотни", "Сто", "двести", "три сотни", "четыре сотни", "пятьсот", "шестьсот", "семь сотен", "восемьсот", "девятьсот"],
 uniqueIllions : true,
 illionsList : ["млн", "миллиона", "миллиарда", "триллиона", "квадриллиона", "квинтильонов", "секстиллионов", "септильонов", "миллион в восьмой степени"],
-//this only goes up to a vigintillion, but that is well beyond the maximum integer in javascript, and there is a conditional branch that can handle numbers higher than that
 illionPrefixes : ["нет м", "м", "м", "тр", "квадр", "квинтильонов"],
 illionSuffixes : ["онов", "она", "арда", "она", "она", ""],
-//single words are defined here, so they're easier to find and edit
+// Single words are defined here, so they're easier to find and edit
 and : "and",
 ten : "ten",
 tens : "tens",
@@ -85,18 +83,18 @@ leftParenthesis : "(",
 rightParenthesis : ")"
 }
 
-//To change the language, make your own language object and set currentLanguage to it here
+// To change the language, make your own language object and set currentLanguage to it here
 numberAsWords.currentLanguage = numberAsWords.languages.english;
 
-//takes a string of two numbers as ASCII characters in reverse order
-//returns the equivalent of the original number in word form
+// Takes a string of two numbers as ASCII characters in reverse order
+// Returns the equivalent of the original number in word form
 numberAsWords.duetAsWords = function (duet)
 {
-	//initialize duet words as empty string
+	// Initialize duet words as empty string
 	var duetWords = numberAsWords.currentLanguage.emptyString;
 	
-	//if the duet is in the teens and the current language has unique words for teens
 	if (duet.charAt(1) == numberAsWords.currentLanguage.numerals[1] && numberAsWords.currentLanguage.uniqueTeens)
+	// the duet is in the teens and the current language has unique words for teens
 	{
 		duetWords = numberAsWords.currentLanguage.teensList[parseInt(duet.charAt(0))];
 	}
@@ -104,10 +102,10 @@ numberAsWords.duetAsWords = function (duet)
 	{
 		var thereWereTens = false;
 		
-		//build the duet's words
+		// Build the duet's words
 		
-		//if there are tens
 		if (duet.charAt(1) != numberAsWords.currentLanguage.numerals[0])
+		// there are tens
 		{
 			if (numberAsWords.currentLanguage.uniqueTens)
 			{
@@ -121,20 +119,20 @@ numberAsWords.duetAsWords = function (duet)
 			thereWereTens = true;
 		}
 		
-		//if there are ones
 		if (duet.charAt(0) != numberAsWords.currentLanguage.numerals[0])
+		// there are ones
 		{
-			//if there were tens, 
 			if (thereWereTens)
+			// there were tens,
 			{
 				if (numberAsWords.currentLanguage.uniqueTens)
 				{
-					//add a hyphen
+					// Add a hyphen
 					duetWords += numberAsWords.currentLanguage.hyphen;
 				}
 				else
 				{
-					//add an "and" 
+					// Add an "and"
 					duetWords += numberAsWords.currentLanguage.space + numberAsWords.currentLanguage.and + numberAsWords.currentLanguage.space;
 				}
 			}
@@ -146,15 +144,15 @@ numberAsWords.duetAsWords = function (duet)
 	return duetWords;
 }
 
-//takes a string of three numbers as ASCII characters in reverse order
-//returns the equivalent of the original number in words
+// Takes a string of three numbers as ASCII characters in reverse order
+// Returns the equivalent of the original number in words
 numberAsWords.tripletAsWords = function (triplet)
 {
-	//initialize triplet words as empty string
+	// Initialize triplet words as empty string
 	var tripletWords = numberAsWords.currentLanguage.emptyString;
 	var thereWereHundereds = false;
 	
-	//take off last character
+	// Take off last character
 	var mostSignificantDigit = triplet.substr(2);
 	var duet = triplet.substr(0, 2);
 	
@@ -175,10 +173,10 @@ numberAsWords.tripletAsWords = function (triplet)
 	
 	if (duetWords)
 	{
-		//if there were hundreds, 
 		if (thereWereHundereds)
+		// there were hundreds,
 		{
-			//add an and and two spaces on either side
+			// Add an and and two spaces on either side
 			tripletWords += numberAsWords.currentLanguage.space + numberAsWords.currentLanguage.and + numberAsWords.currentLanguage.space;
 		}
 		
@@ -188,14 +186,14 @@ numberAsWords.tripletAsWords = function (triplet)
 	return tripletWords;
 }
 
-//takes a string ASCII characters
-//returns the same string with enough zeroes added to the end such that the length of the string is divisible by three
+// Takes a string ASCII characters
+// Returns the same string with enough zeroes added to the end such that the length of the string is divisible by three
 numberAsWords.padTriplets = function (numberCharacterString)
 {
-	//while there are incomplete triplets, 
 	while (numberCharacterString.length % 3 !== 0)
+	// there are incomplete triplets,
 	{
-		//add a zero to the end of the number
+		// Add a zero to the end of the number
 		numberCharacterString += numberAsWords.currentLanguage.numerals[0];
 	}
 	
@@ -204,71 +202,71 @@ numberAsWords.padTriplets = function (numberCharacterString)
 
 numberAsWords.wholeNumberAsWords = function (wholeNumberCharacters)
 {
-	//initialize final words as empty string
+	// Initialize final words as empty string
 	var words = numberAsWords.currentLanguage.emptyString;
 	
-	//if the characters aren't a string, 
 	if (typeof wholeNumberCharacters !== "string")
+	// the characters aren't a string,
 	{
-		//return the empty string
+		// Return the empty string
 		return words;
 	}
 	
-	//reverse the order of the numbers so it's simpler to get triplets and pad the most significant digits of the number
+	// Reverse the order of the numbers so it's simpler to get triplets and pad the most significant digits of the number
 	wholeNumberCharacters = wholeNumberCharacters.split("").reverse().join("");
 	
-	//ensure all triplets are complete by adding zeroes to the end (the most significant digit places)
-	//creates a whole number of triplets without adding false information
+	// Ensure all triplets are complete by adding zeroes to the end (the most significant digit places)
+	// Creates a whole number of triplets without adding false information
 	wholeNumberCharacters = numberAsWords.padTriplets(wholeNumberCharacters);
 	
 	var thereWereTripletsPreviously = false;
 	
 	while (wholeNumberCharacters.length > 0)
 	{
-		//take off the last three characters
+		// Take off the last three characters
 		var triplet = wholeNumberCharacters.substr(wholeNumberCharacters.length - 3);
 		wholeNumberCharacters = wholeNumberCharacters.substr(0, wholeNumberCharacters.length - 3);
 		
 		var tripletWords = numberAsWords.tripletAsWords(triplet);
 		
-		//if there was anything worth mentioning in "triplet", 
 		if (tripletWords)
+		// there was anything worth mentioning in "triplet",
 		{
-			//if there has been a triplet previously, add a space before this triplet
 			if (thereWereTripletsPreviously)
+			// there has been a triplet previously, add a space before this triplet
 			{
 				words += numberAsWords.currentLanguage.space;
 			}
 			
 			words += tripletWords;
 			
-			//add thousand, <illionPrefix> + illion to end of each triplet, depending on how long the remaining string is (thus showing what place this triplet is in)
+			// Add thousand, <illionPrefix> + illion to end of each triplet, depending on how long the remaining string is (thus showing what place this triplet is in)
 			var tripletsLeft = wholeNumberCharacters.length / 3;
 			
-			//if there are more triplets left than illionPrefixes or illionSuffixes,
 			if (tripletsLeft > numberAsWords.currentLanguage.illionPrefixes.length || tripletsLeft > numberAsWords.currentLanguage.illionSuffixes.length)
+			// there are more triplets left than illionPrefixes or illionSuffixes,
 			{
-				//we don't have any -illion fixes to use, so make them up
+				// We don't have any -illion fixes to use, so make them up
 				words += numberAsWords.currentLanguage.space + numberAsWords.currentLanguage.leftParenthesis + numberAsWords.numberAsWords(tripletsLeft) + numberAsWords.currentLanguage.rightParenthesis + numberAsWords.currentLanguage.hyphen + numberAsWords.currentLanguage.illion;
 			}
 			else
-			//if there is more than one triplet left, 
 			if (tripletsLeft > 1)
+			// there is more than one triplet left,
 			{
-				//this was a *-illion, so add space + <illion prefix> + illion + <illion suffix> to the end of the word
-				//subtract one from tripletsLeft, since it is one more than how many *-illions this is
+				// This was a *-illion, so add space + <illion prefix> + illion + <illion suffix> to the end of the word
+				// Subtract one from tripletsLeft, since it is one more than how many *-illions this is
 				words += numberAsWords.currentLanguage.space + numberAsWords.currentLanguage.illionPrefixes[tripletsLeft - 1] + numberAsWords.currentLanguage.illion + numberAsWords.currentLanguage.illionSuffixes[tripletsLeft - 1];
 			}
 			else
-			//if there are three characters left, 
 			if (tripletsLeft == 1)
+			// there are three characters left,
 			{
-				//this was a thousand, so add space + thousand to the end of the words
+				// This was a thousand, so add space + thousand to the end of the words
 				words += numberAsWords.currentLanguage.space + numberAsWords.currentLanguage.thousand;
 			}
-			//if there are no characters left, this is just a hundred, so no following words are needed
+			// If there are no characters left, this is just a hundred, so no following words are needed
 			
-			//if we've been through this if statement once, there was at least one triplet
+			// If we've been through this if statement once, there was at least one triplet
 			var thereWereTripletsPreviously = true;
 		}
 	}
@@ -280,70 +278,68 @@ numberAsWords.decimalNumberAsWords = function (decimalNumberCharacters)
 {
 	var words = numberAsWords.currentLanguage.emptyString;
 	
-	//if the characters aren't a string, 
 	if (typeof decimalNumberCharacters !== "string")
+	// the characters aren't a string,
 	{
-		//return the empty string
+		// Return the empty string
 		return words;
 	}
 	
-	//pad the end of the number to create even triplets
-	//creates even triplets without adding false information
+	// Pad the end of the number to create even triplets
+	// Creates even triplets without adding false information
 	decimalNumberCharacters = numberAsWords.padTriplets(decimalNumberCharacters);
 	
-	//keep track of whether we need to add a space before each triplet
+	// Keep track of whether we need to add a space before each triplet
 	var thereWereTripletsPreviously = false;
 	
-	//while decimalNumberCharacters.length is above 0, loop and keep track of how many cycles have passed in i
+	// While decimalNumberCharacters.length is above 0, loop and keep track of how many cycles have passed in i
 	for (var i = 0; decimalNumberCharacters.length > 0; i++)
 	{
-		//take the first three characters off of decimalNumberCharacters and store them in "triplet"
+		// Take the first three characters off of decimalNumberCharacters and store them in "triplet"
 		var triplet = decimalNumberCharacters.substr(0, 3);
-		//re-assign decimalNumberCharacters without the first three characters
+		// Re-assign decimalNumberCharacters without the first three characters
 		decimalNumberCharacters = decimalNumberCharacters.substr(3);
 		
-		//convert the triplet characters into words
-		//reverse order of triplet characters first, because the function expects them with the least significant digit leading
+		// Convert the triplet characters into words
+		// Reverse order of triplet characters first, because the function expects them with the least significant digit leading
 		var tripletWords = numberAsWords.tripletAsWords(triplet.split("").reverse().join(""));
 		
-		//if the three characters converted into a non-empty string, 
 		if (tripletWords)
+		// the three characters converted into a non-empty string,
 		{
-			//if there were triplets previously, 
 			if (thereWereTripletsPreviously)
+			// there were triplets previously,
 			{
-				//add a space to the end of words
+				// Add a space to the end of words
 				words += numberAsWords.currentLanguage.space;
 			}
 			
-			//add tripletWords string to the end of words
+			// Add tripletWords string to the end of words
 			words += tripletWords;
 			
-			//add what fraction level it is (thousandths, <illionprefix>illionth), based on the for loop iterator
-			//if the fraction is too small for the whole list of illion prefixes, 
+			// Add what fraction level it is (thousandths, <illionprefix>illionth), based on the for loop iterator
 			if (i >= numberAsWords.currentLanguage.illionPrefixes.length)
+			// the fraction is too small for the whole list of illion prefixes,
 			{
-				//append a space, a left parenthesis, a new -illionth prefix based on how many times the loop has completed, a right parenthesis, a hyphen, and "illionths" to the end of words
+				// Append a space, a left parenthesis, a new -illionth prefix based on how many times the loop has completed, a right parenthesis, a hyphen, and "illionths" to the end of words
 				words += numberAsWords.currentLanguage.space + numberAsWords.currentLanguage.leftParenthesis + numberAsWords.numberAsWords(i) + numberAsWords.currentLanguage.rightParenthesis + numberAsWords.currentLanguage.hyphen + numberAsWords.currentLanguage.illionths;
 			}
-			//else, 
 			else
-			//if the fraction is still larger than a thousandth, 
 			if (i > 0)
+			// the fraction is still larger than a thousandth,
 			{
-				//this is a -illionth
-				//append a space, the proper -illionth prefix, and "illionths" to the end of words
+				// This is a -illionth
+				// Append a space, the proper -illionth prefix, and "illionths" to the end of words
 				words += numberAsWords.currentLanguage.space + numberAsWords.currentLanguage.illionPrefixes[i] + numberAsWords.currentLanguage.illionths;
 			}
-			//else
 			else
-			//this is a thousandth
+			// this is a thousandth
 			{
-				//append a space and "thousandths" to the end of words
+				// Append a space and "thousandths" to the end of words
 				words += numberAsWords.currentLanguage.space + numberAsWords.currentLanguage.thousandths;
 			}
 			
-			//set thereWereTripletsPreviously to true
+			// Set thereWereTripletsPreviously to true
 			thereWereTripletsPreviously = true;
 		}
 	}
@@ -351,33 +347,33 @@ numberAsWords.decimalNumberAsWords = function (decimalNumberCharacters)
 	return words;
 }
 
-//takes a string of numbers as ASCII characters
-//returns those numbers in word form
+// Takes a string of numbers as ASCII characters
+// Returns those numbers in word form
 numberAsWords.charactersAsWords = function (characters)
 {
-	//initialize final words as empty string
+	// Initialize final words as empty string
 	var words = numberAsWords.currentLanguage.emptyString;
 	
-	//if "characters" isn't a string, 
 	if (typeof characters !== "string" || characters === "")
+	// "characters" isn't a string,
 	{
-		//return blank string
+		// Return blank string
 		return words;
 	}
 	
-	//remove thousands separator
+	// Remove thousands separator
 	characters = characters.replace(new RegExp("[" + numberAsWords.currentLanguage.thousandsSeparator + "]", "g"), numberAsWords.currentLanguage.emptyString);
 	
 	
-	//clean out all but one decimal point, leaving the leftmost one intact
+	// Clean out all but one decimal point, leaving the leftmost one intact
 	//TODO: should leftmost or rightmost be preserved?
 	var charactersDecimalPoints = characters.match(new RegExp("[" + numberAsWords.currentLanguage.radixPoint + "]", "g"));
 	while (charactersDecimalPoints !== null && charactersDecimalPoints.length > 1)
 	{
-		//replace a decimal point, some number of digits, and a decimal point with a decimal point and the numbers
+		// Replace a decimal point, some number of digits, and a decimal point with a decimal point and the numbers
 		characters = characters.replace(new RegExp("[" + numberAsWords.currentLanguage.radixPoint + "]" + "(\\d*)" + "[" + numberAsWords.currentLanguage.radixPoint + "]", "g"), numberAsWords.currentLanguage.radixPoint + "$1");
-		//refresh the number of decimal points still in the string
-		charactersDecimalPoints = characters.match(new RegExp("[" + numberAsWords.currentLanguage.radixPoint + "]", "g"))
+		// Refresh the number of decimal points still in the string
+		charactersDecimalPoints = characters.match(new RegExp("[" + numberAsWords.currentLanguage.radixPoint + "]", "g"));
 	}
 	
 	if (parseInt(characters) === 0)
@@ -386,52 +382,52 @@ numberAsWords.charactersAsWords = function (characters)
 		return words;
 	}
 	
-	//split the characters into whole number and decimal side
+	// Split the characters into whole number and decimal side
 	var splitCharacters = characters.split(".");
 	var wholeNumberCharacters = splitCharacters[0];
 	var decimalCharacters = splitCharacters[1];
 	
-	//turn whole number portion into words and add them to the end of final words variable
+	// Turn whole number portion into words and add them to the end of final words variable
 	words += numberAsWords.wholeNumberAsWords(wholeNumberCharacters);
-	//turn decimal portion into words and add them to the end of the final words variable
+	// Turn decimal portion into words and add them to the end of the final words variable
 	
-	//store the decimalCharacters as words in decimalWords
+	// Store the decimalCharacters as words in decimalWords
 	var decimalWords = numberAsWords.decimalNumberAsWords(decimalCharacters);
 	
-	//if there were decimal words, 
 	if (decimalWords)
+	// there were decimal words,
 	{
-		//if there is already something in words, 
 		if (words)
+		// there is already something in words,
 		{
-			//add a space, "and", and a space before the decimal words
+			// Add a space, "and", and a space before the decimal words
 			words += numberAsWords.currentLanguage.space + numberAsWords.currentLanguage.and + numberAsWords.currentLanguage.space;
 		}
 		
-		//add the decimal words to the end of words
+		// Add the decimal words to the end of words
 		words += decimalWords;
 	}
 	
 	//TODO: keep a marker of whether the number has been all zeroes up until this point, such that this change can be made with certainty
-	//if words is completely empty
 	if (words === numberAsWords.currentLanguage.emptyString)
+	// words is completely empty
 	{
-		//it's probably zero
+		// It's probably zero
 		words = numberAsWords.currentLanguage.digitList[0];
 	}
 	
 	return words;
 }
 
-//takes a number
-//returns that number in word form
+// Takes a number
+// Returns that number in word form
 numberAsWords.numberAsWords = function (number)
 {
 	return numberAsWords.charactersAsWords(number.toString());
 }
 
-//"main" function
-//just takes the arguments and passes them to numberAsWords(number)
+// "main" function
+// Just takes the arguments and passes them to numberAsWords(number)
 numberAsWords.main = function(args)
 {
 	return numberAsWords.numberAsWords(args);
