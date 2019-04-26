@@ -432,7 +432,7 @@ numberAsWords.main = function(args)
 {
 	return numberAsWords.numberAsWords(args);
 }
-/* end of numberAsWords.js */
+/* End of numberAsWords.js */
 
 
 // Create namespace
